@@ -30,7 +30,7 @@ pipeline {
                 script {
                     // Authenticate with GitHub Container Registry
                     echo "Authenticating with GitHub Container Registry"
-                    sh "echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${REPO_OWNER} --password-stdin"
+                    sh 'echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${REPO_OWNER} --password-stdin'
                 }
             }
         }      
