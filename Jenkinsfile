@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'docker-agent-custom' }
+    agent { label 'docker-agent-1' }
     environment {
         GITHUB_REPO = "etzionas/dev-ops-api-example"
         GITHUB_TOKEN = credentials('github_token') // GitHub token from Jenkins credentials
@@ -22,18 +22,14 @@ pipeline {
         )
     }
     stages {
-        stage('Authenticate docker registry') {
+        stage('Prepare Environment') {
             steps {
-                // withCredentials([usernamePassword(credentialsId: 'github-docker-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                //     sh "echo ${DOCKER_PASS} | docker login ghcr.io -u ${DOCKER_USER} --password-stdin"
-                // }
-                script {
-                    // Authenticate with GitHub Container Registry
-                    echo "Authenticating with GitHub Container Registry"
-                    sh 'echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${REPO_OWNER} --password-stdin'
-                }
+                sh '''
+                # Install unzip at runtime
+                apt-get update && apt-get install -y unzip && rm -rf /var/lib/apt/lists/*
+                '''
             }
-        }      
+        }
         stage('Fetch GitHub Action Logs') {
             steps {
                 script {
