@@ -24,10 +24,13 @@ pipeline {
     stages {
         stage('Prepare Environment') {
             steps {
-                sh '''
-                # Install unzip at runtime
-                apt-get update && apt-get install -y unzip && rm -rf /var/lib/apt/lists/*
-                '''
+                // Check if unzip is installed and install it only if missing
+                def unzipInstalled = sh(script: "dpkg -l | grep -qw unzip", returnStatus: true) == 0
+                if (!unzipInstalled) {
+                    echo 'Unzip is not installed. Installing unzip...'
+                    sh 'apt-get update && apt-get install -y unzip && rm -rf /var/lib/apt/lists/*'
+                } else {
+                    echo 'Unzip is already installed.'
             }
         }
         stage('Fetch GitHub Action Logs') {
