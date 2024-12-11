@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent { label 'docker-agent-custom' }
     environment {
         GITHUB_REPO = "etzionas/dev-ops-api-example"
         GITHUB_TOKEN = credentials('github_token') // GitHub token from Jenkins credentials
@@ -35,7 +35,6 @@ pipeline {
             }
         }      
         stage('Fetch GitHub Action Logs') {
-            agent { label 'docker-agent-custom' }
             steps {
                 script {
                     def workflowRunId = env.workflow_run_id
