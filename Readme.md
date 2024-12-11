@@ -9,7 +9,7 @@ This is a simple FastAPI project with a basic API and tests.
     ```bash
     git clone <repository_url>
     cd fastapi_project
-    ```
+    ```njnjn
 
 2. Create a virtual environment and activate it:
 
