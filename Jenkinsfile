@@ -5,7 +5,6 @@ pipeline {
         GITHUB_TOKEN = credentials('github_token') // GitHub token from Jenkins credentials
         REPO_OWNER = 'etzionas'
         REPO_NAME = 'dev-ops-api-example'
-        DOCKER_AGENT_IMAGE = "ghcr.io/${REPO_OWNER}/${REPO_NAME}:1.0.0"
     }
     triggers{
         GenericTrigger(
@@ -24,13 +23,15 @@ pipeline {
     stages {
         stage('Prepare Environment') {
             steps {
-                // Check if unzip is installed and install it only if missing
-                def unzipInstalled = sh(script: "dpkg -l | grep -qw unzip", returnStatus: true) == 0
-                if (!unzipInstalled) {
-                    echo 'Unzip is not installed. Installing unzip...'
-                    sh 'apt-get update && apt-get install -y unzip && rm -rf /var/lib/apt/lists/*'
-                } else {
-                    echo 'Unzip is already installed.'
+                script {
+                    // Check if unzip is installed and install it only if missing
+                    def unzipInstalled = sh(script: "dpkg -l | grep -qw unzip", returnStatus: true) == 0
+                    if (!unzipInstalled) {
+                        echo 'Unzip is not installed. Installing unzip...'
+                        sh 'apt-get update && apt-get install -y unzip && rm -rf /var/lib/apt/lists/*'
+                    } else {
+                        echo 'Unzip is already installed.'
+                    }
                 }
             }
         }
