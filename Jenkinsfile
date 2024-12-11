@@ -53,11 +53,6 @@ pipeline {
                         -o logs.zip
                     """
                     // // Unzip and display logs
-                    // sh """
-                    //     mkdir -p logs
-                    //     tar -xzf logs.tar -C logs
-                    //     cat logs/**/*.txt'
-                    // """
                     sh 'unzip -o logs.zip -d logs && cat logs/**/*.txt'
                 }
             }
