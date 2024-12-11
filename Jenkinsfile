@@ -24,12 +24,13 @@ pipeline {
     stages {
         stage('Authenticate docker registry') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'github-docker-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    script {
-                        // Authenticate with GitHub Container Registry
-                        echo "Authenticating with GitHub Container Registry"
-                        sh "echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${REPO_OWNER} --password-stdin"
-                    }
+                // withCredentials([usernamePassword(credentialsId: 'github-docker-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                //     sh "echo ${DOCKER_PASS} | docker login ghcr.io -u ${DOCKER_USER} --password-stdin"
+                // }
+                script {
+                    // Authenticate with GitHub Container Registry
+                    echo "Authenticating with GitHub Container Registry"
+                    sh "echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${REPO_OWNER} --password-stdin"
                 }
             }
         }      
