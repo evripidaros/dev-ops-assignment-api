@@ -1,10 +1,11 @@
 pipeline {
-    agent { label 'docker-agent-custom' }
+    agent none
     environment {
         GITHUB_REPO = "etzionas/dev-ops-api-example"
         GITHUB_TOKEN = credentials('github_token') // GitHub token from Jenkins credentials
         REPO_OWNER = 'etzionas'
         REPO_NAME = 'dev-ops-api-example'
+        DOCKER_AGENT_IMAGE = "ghcr.io/${REPO_OWNER}/${REPO_NAME}:1.0.0"
     }
     triggers{
         GenericTrigger(
@@ -21,7 +22,19 @@ pipeline {
         )
     }
     stages {
+        stage('Authenticate docker registry') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github-docker-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        // Authenticate with GitHub Container Registry
+                        echo "Authenticating with GitHub Container Registry"
+                        sh "echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${REPO_OWNER} --password-stdin"
+                    }
+                }
+            }
+        }      
         stage('Fetch GitHub Action Logs') {
+            agent { label 'docker-agent-custom' }
             steps {
                 script {
                     def workflowRunId = env.workflow_run_id
