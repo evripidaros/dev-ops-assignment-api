@@ -31,6 +31,7 @@ pipeline {
                     sh 'apt-get update && apt-get install -y unzip && rm -rf /var/lib/apt/lists/*'
                 } else {
                     echo 'Unzip is already installed.'
+                }
             }
         }
         stage('Fetch GitHub Action Logs') {
